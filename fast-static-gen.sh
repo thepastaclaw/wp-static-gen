@@ -140,7 +140,39 @@ find "${DEST}" -type f -name "*.html" -print0 | \
 S4=$(date +%s)
 echo "Rewriting: $((S4 - S3))s"
 
-# Step 5: Cleanup empty files (404s from WP)
+# Step 5: Decode percent-encoded filenames (unicode slugs from wget)
+echo "--- Step 5: Decode unicode filenames ---"
+python3 -c "
+import os, urllib.parse
+root = '${DEST}'
+renamed = 0
+for dirpath, dirnames, filenames in os.walk(root, topdown=False):
+    for name in dirnames + filenames:
+        if '%' in name:
+            try:
+                decoded = urllib.parse.unquote(name)
+                if decoded != name:
+                    old = os.path.join(dirpath, name)
+                    new = os.path.join(dirpath, decoded)
+                    if not os.path.exists(new):
+                        os.rename(old, new)
+                        renamed += 1
+            except: pass
+print(f'Decoded {renamed} filenames')
+"
+
+# Step 6: Copy additional assets (favicons, wp-includes)
+echo "--- Step 6: Extra assets ---"
+mkdir -p ${DEST}/wp-content/themes/dash-theme/img/icons/favicon/
+cp ${WP_DIR}/wp-content/themes/dash-theme/img/icons/favicon/* ${DEST}/wp-content/themes/dash-theme/img/icons/favicon/ 2>/dev/null || true
+cp ${WP_DIR}/wp-content/themes/dash-theme/img/icons/favicon/favicon.ico ${DEST}/favicon.ico 2>/dev/null || true
+mkdir -p ${DEST}/wp-includes/css/dist/block-library/
+cp ${WP_DIR}/wp-includes/css/dist/block-library/style.min.css ${DEST}/wp-includes/css/dist/block-library/ 2>/dev/null || true
+cp ${WP_DIR}/wp-includes/js/clipboard.min.js ${DEST}/wp-includes/js/ 2>/dev/null || true
+cp ${WP_DIR}/wp-includes/js/wp-emoji-release.min.js ${DEST}/wp-includes/js/ 2>/dev/null || true
+cp ${WP_DIR}/wp-content/uploads/arrow-menu-1.svg ${DEST}/wp-content/uploads/ 2>/dev/null || true
+
+# Step 7: Cleanup empty files (404s from WP)
 find "${DEST}" -name "index.html" -empty -type f -delete
 find "${DEST}" -type d -empty -delete
 
