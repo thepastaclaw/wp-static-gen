@@ -3,8 +3,7 @@ set -e
 
 # =====================================================
 # Fast Static Site Generator for wp.dash.org
-# Usage: ./fast-static-gen.sh [target-host]
-# Default target: crash.dash.org
+# Generates crash.dash.org (or www.dash.org) in ~4 min
 # =====================================================
 
 DEST="/var/www/crash"
@@ -21,8 +20,10 @@ echo "=== Fast Static Site Generator ==="
 echo "Target: ${DEST_HOST}"
 echo "Start: $(date)"
 
+# Clean destination
 rm -rf ${DEST}/*
 
+# Step 1: Generate URL list via WP-CLI (correct WPML permalinks)
 echo "--- Step 1: URL discovery ---"
 cd ${WP_DIR}
 wp eval '
@@ -45,6 +46,7 @@ $cats = get_categories(array("hide_empty" => true));
 foreach ($cats as $c) $urls[] = get_category_link($c->term_id);
 $tags = get_tags(array("hide_empty" => true));
 foreach ($tags as $t) $urls[] = get_tag_link($t->term_id);
+// Language home pages
 foreach ($languages as $lang) {
     if ($lang["code"] !== "en") $urls[] = home_url("/" . $lang["code"] . "/");
 }
@@ -57,6 +59,7 @@ echo count($urls) . " URLs" . PHP_EOL;
 S1=$(date +%s)
 echo "URL discovery: $((S1 - START))s"
 
+# Step 2: Parallel fetch
 echo "--- Step 2: Parallel fetch (${WORKERS} workers) ---"
 cat /tmp/all-urls.txt | xargs -P${WORKERS} -I{} bash -c '
   URL="{}"
@@ -69,11 +72,13 @@ cat /tmp/all-urls.txt | xargs -P${WORKERS} -I{} bash -c '
     -O "'"${DEST}"'${PATH_PART}" "$URL" 2>/dev/null || true
 '
 S2=$(date +%s)
-echo "Fetch: $((S2 - S1))s"
+echo "Fetch: $((S2 - S1))s ($(wc -l < /tmp/all-urls.txt) pages)"
 
+# Step 3: Copy theme + plugin assets from disk
 echo "--- Step 3: Asset copy ---"
 mkdir -p ${DEST}/wp-content/themes/dash-theme/
 cp -r ${WP_DIR}/wp-content/themes/dash-theme/assets ${DEST}/wp-content/themes/dash-theme/
+
 for f in advanced-custom-fields-pro/assets cookie-law-info/legacy/public \
          highlighting-code-block/build highlighting-code-block/assets \
          page-links-to/dist sitepress-multilingual-cms/res \
@@ -84,14 +89,18 @@ for f in advanced-custom-fields-pro/assets cookie-law-info/legacy/public \
   DST="${DEST}/wp-content/plugins/${f}"
   if [ -d "$SRC" ]; then mkdir -p "$DST"; cp -r "$SRC"/* "$DST"/ 2>/dev/null || true; fi
 done
+
 mkdir -p ${DEST}/wp-includes/js/jquery/
 cp ${WP_DIR}/wp-includes/js/jquery/jquery.min.js ${DEST}/wp-includes/js/jquery/ 2>/dev/null || true
 cp ${WP_DIR}/wp-includes/js/jquery/jquery-migrate.min.js ${DEST}/wp-includes/js/jquery/ 2>/dev/null || true
+
+# Copy WPML flag uploads
 mkdir -p ${DEST}/wp-content/uploads/flags/
 cp ${WP_DIR}/wp-content/uploads/flags/* ${DEST}/wp-content/uploads/flags/ 2>/dev/null || true
 S3=$(date +%s)
 echo "Assets: $((S3 - S2))s"
 
+# Step 4: URL rewriting
 echo "--- Step 4: URL rewriting ---"
 find "${DEST}" -type f \( -name "*.html" -o -name "*.css" -o -name "*.js" -o -name "*.xml" \) -print0 | \
   xargs -0 -P${WORKERS} sed -i \
@@ -99,21 +108,28 @@ find "${DEST}" -type f \( -name "*.html" -o -name "*.css" -o -name "*.js" -o -na
     -e "s|http://wp\.dash\.org|https://${DEST_HOST}|g" \
     -e "s|//wp\.dash\.org|//${DEST_HOST}|g" \
     -e "s|wp\.dash\.org|${DEST_HOST}|g"
+
+# Rewrite uploads to media CDN
 find "${DEST}" -type f -name "*.html" -print0 | \
   xargs -0 -P${WORKERS} sed -i \
     -e "s|https://${DEST_HOST}/wp-content/uploads/|https://${MEDIA_HOST}/wp-content/uploads/|g" \
     -e "s|/wp-content/uploads/flags/|https://${DEST_HOST}/wp-content/uploads/flags/|g" \
     -e "s|src=\"wp-content/|src=\"/wp-content/|g" \
     -e "s|href=\"wp-content/|href=\"/wp-content/|g"
+
+# Fix: keep flags pointing locally (they're copied), fix double-rewrite
 find "${DEST}" -type f -name "*.html" -print0 | \
   xargs -0 -P${WORKERS} sed -i \
-    -e "s|https://${MEDIA_HOST}/wp-content/uploads/flags/|https://${DEST_HOST}/wp-content/uploads/flags/|g"
+    -e "s|https://${MEDIA_HOST}/wp-content/uploads/flags/|https://${DEST_HOST}/wp-content/uploads/flags/|g" \
+    -e "s|https://${MEDIA_HOST}https://${MEDIA_HOST}|https://${MEDIA_HOST}|g"
 S4=$(date +%s)
 echo "Rewriting: $((S4 - S3))s"
 
+# Step 5: Cleanup empty files (404s from WP)
 find "${DEST}" -name "index.html" -empty -type f -delete
 find "${DEST}" -type d -empty -delete
 
+# Results
 END=$(date +%s)
 TOTAL=$((END - START))
 echo ""
