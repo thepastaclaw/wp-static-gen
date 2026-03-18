@@ -8,9 +8,24 @@ set -e
 
 DEST="/var/www/crash"
 SITE="https://wp.dash.org"
-BASIC_USER="REDACTED"
-BASIC_PASS="REDACTED"
 DEST_HOST="${1:-crash.dash.org}"
+
+# Load credentials from .env (never commit credentials)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [ -f "${SCRIPT_DIR}/.env" ]; then
+  source "${SCRIPT_DIR}/.env"
+elif [ -f "/root/.env.static-gen" ]; then
+  source "/root/.env.static-gen"
+else
+  echo "ERROR: No .env file found. Create one with BASIC_USER and BASIC_PASS."
+  echo "  cp ${SCRIPT_DIR}/.env.example ${SCRIPT_DIR}/.env && vi ${SCRIPT_DIR}/.env"
+  exit 1
+fi
+
+if [ -z "${BASIC_USER}" ] || [ -z "${BASIC_PASS}" ]; then
+  echo "ERROR: BASIC_USER and BASIC_PASS must be set in .env"
+  exit 1
+fi
 MEDIA_HOST="media.dash.org"
 WORKERS=8
 WP_DIR="/var/www/wordpress"
