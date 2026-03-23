@@ -124,19 +124,14 @@ find "${DEST}" -type f \( -name "*.html" -o -name "*.css" -o -name "*.js" -o -na
     -e "s|//wp\.dash\.org|//${DEST_HOST}|g" \
     -e "s|wp\.dash\.org|${DEST_HOST}|g"
 
-# Rewrite uploads to media CDN
+# Rewrite uploads to media CDN (flags stay local via placeholder trick)
 find "${DEST}" -type f -name "*.html" -print0 | \
   xargs -0 -P${WORKERS} sed -i \
+    -e "s|https://${DEST_HOST}/wp-content/uploads/flags/|__FLAGS_PLACEHOLDER__|g" \
     -e "s|https://${DEST_HOST}/wp-content/uploads/|https://${MEDIA_HOST}/wp-content/uploads/|g" \
-    -e "s|/wp-content/uploads/flags/|https://${DEST_HOST}/wp-content/uploads/flags/|g" \
+    -e "s|__FLAGS_PLACEHOLDER__|https://${DEST_HOST}/wp-content/uploads/flags/|g" \
     -e "s|src=\"wp-content/|src=\"/wp-content/|g" \
     -e "s|href=\"wp-content/|href=\"/wp-content/|g"
-
-# Fix: keep flags pointing locally (they're copied), fix double-rewrite
-find "${DEST}" -type f -name "*.html" -print0 | \
-  xargs -0 -P${WORKERS} sed -i \
-    -e "s|https://${MEDIA_HOST}/wp-content/uploads/flags/|https://${DEST_HOST}/wp-content/uploads/flags/|g" \
-    -e "s|https://${MEDIA_HOST}https://${MEDIA_HOST}|https://${MEDIA_HOST}|g"
 S4=$(date +%s)
 echo "Rewriting: $((S4 - S3))s"
 
