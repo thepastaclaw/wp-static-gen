@@ -167,6 +167,15 @@ cp ${WP_DIR}/wp-includes/js/clipboard.min.js ${DEST}/wp-includes/js/ 2>/dev/null
 cp ${WP_DIR}/wp-includes/js/wp-emoji-release.min.js ${DEST}/wp-includes/js/ 2>/dev/null || true
 cp ${WP_DIR}/wp-content/uploads/arrow-menu-1.svg ${DEST}/wp-content/uploads/ 2>/dev/null || true
 
+# Step 6b: Apply static overrides (canonical hand-maintained files)
+# Files under /root/static-overrides/ are the source of truth and survive regeneration.
+OVERRIDES="/root/static-overrides"
+if [ -d "$OVERRIDES" ]; then
+  echo "--- Step 6b: Static overrides ---"
+  cp -a "$OVERRIDES"/. "${DEST}"/
+  find "$OVERRIDES" -type f | sed "s|$OVERRIDES|override|"
+fi
+
 # Step 7: Cleanup empty files (404s from WP)
 find "${DEST}" -name "index.html" -empty -type f -delete
 find "${DEST}" -type d -empty -delete

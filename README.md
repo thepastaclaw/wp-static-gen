@@ -65,6 +65,16 @@ AWS_ACCESS_KEY_ID=<key> AWS_SECRET_ACCESS_KEY=<secret> AWS_DEFAULT_REGION=us-wes
   --exclude "simply-static/*" --exclude "*.php"
 ```
 
+## Static overrides
+
+Files under `/root/static-overrides/` on the server are copied over the generated output after every run (Step 6b) and are the canonical source for those pages. The roadmap page (`roadmap/index.html`) is hand-maintained there — it is NOT sourced from WordPress, and regeneration will not overwrite it.
+
+`overrides/` in this repo mirrors the server directory for version control. After changing a file here, copy it to the server:
+
+```bash
+scp -r overrides/. root@wp.dash.org:/root/static-overrides/
+```
+
 ## Known issues
 
 - Some WPML flag images are stored in `/wp-content/uploads/flags/` outside the media library — the script copies these locally
