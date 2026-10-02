@@ -115,7 +115,7 @@ var log_object = {"ajax_url":""};
 }
 
 .atomic .col-3:hover {
-    background: url(assets/images/alert.png);
+    background: url(https://media.dash.org/wp-content/uploads/alert.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -2199,23 +2199,27 @@ var log_object = {"ajax_url":""};
 					<div class="dot"></div>				</div>
 								<div class="roadmap-item  info right">
 					<div class="caption" data-target="#roadmap-info-61" data-toggle="modal">
-						<h3>Dash Platform v4.2</h3>
+						<h3>Dash Platform v5.0</h3>
 
 													<div class="tags">
 								<div class="tag-bg">
-									September 2026	
+									October 2026	
 								</div>
 								<div class="status">
-										
+										in development	
 								</div>
 							</div>
 							<ul>
+<li>Relational Data Contracts</li>
+<li>Apps That Earn and Moderate</li>
 <li>Time-Range Indexes</li>
 <li>indexOnly Document Types</li>
 <li>Ranked Queries &amp; HAVING</li>
-<li>Document References</li>
 <li>Chained Queries</li>
 <li>Richer Query Matching</li>
+<li>Expiring Documents</li>
+<li>Spending-Limited Keys</li>
+<li>Faster Withdrawals</li>
 </ul>
 
 							<span class="icon-inline sm gray arrow">
@@ -2287,7 +2291,7 @@ var log_object = {"ajax_url":""};
 					<div class="dot"></div>				</div>
 								<div class="roadmap-item  info left">
 					<div class="caption" data-target="#roadmap-info-62" data-toggle="modal">
-						<h3>Dash Platform v4.3</h3>
+						<h3>Dash Platform v5.1</h3>
 
 													<div class="tags">
 								<div class="tag-bg">
@@ -2315,7 +2319,7 @@ var log_object = {"ajax_url":""};
 					<div class="dot"></div>				</div>
 								<div class="roadmap-item  info right">
 					<div class="caption" data-target="#roadmap-info-66" data-toggle="modal">
-						<h3>Dash Platform v4.4</h3>
+						<h3>Dash Platform v5.2</h3>
 
 													<div class="tags">
 								<div class="tag-bg">
@@ -2342,7 +2346,7 @@ var log_object = {"ajax_url":""};
 					<div class="dot"></div>				</div>
 								<div class="roadmap-item  info left">
 					<div class="caption" data-target="#roadmap-info-63" data-toggle="modal">
-						<h3>Dash Platform v5.0</h3>
+						<h3>Dash Platform v6.0</h3>
 
 													<div class="tags">
 								<div class="tag-bg">
@@ -2374,7 +2378,7 @@ var log_object = {"ajax_url":""};
 			<!-- End timeline -->
 			<div class="bottom">
 				<img loading="lazy" src='https://media.dash.org/wp-content/uploads/contact-banner.svg' class='img-fluid'>				<div class="bottom-date">
-					<p>Last updated on 12-Sep-26</p> 
+					<p>Last updated on 30-Sep-26</p> 
 				</div>
 			</div>
 		</div>
@@ -4814,7 +4818,7 @@ var log_object = {"ajax_url":""};
 			    		<h3>iOS DashPay Wallet</h3>
 <p><span style="font-weight: 400;">The release of the DashPay mobile wallet on iOS will allow users to upgrade from Dash Wallet and easily create contested and non-contested usernames and make username payments.</span></p>
 <h3>Shielded Payments</h3>
-<p><span style="font-weight: 400;">The wallet supports shielded payments, keeping amounts and participants confidential using the shielded credit pool introduced in Platform v4.0. Paying a <em>username</em> privately — shielded payments over DashPay’s rails — follows in v4.3.</span></p>
+<p><span style="font-weight: 400;">The wallet supports shielded payments, keeping amounts and participants confidential using the shielded credit pool introduced in Platform v4.0. Paying a <em>username</em> privately — shielded payments over DashPay’s rails — follows in v5.1.</span></p>
 			    	</div>
     			</div>
     		</div>
@@ -4923,40 +4927,52 @@ var log_object = {"ajax_url":""};
     	<div class="content">
     		<div class="tags">
 				<div class="tag-bg">
-					September 2026	
+					October 2026	
 				</div>
 				<div class="status">
-						
+						in development	
 				</div>
 			</div>
     		<div class="row">
     			<div class="col-lg-4 border-right">
-					<h3>Dash Platform v4.2</h3>
+					<h3>Dash Platform v5.0</h3>
     				<div class="richtext text-sm">
 	    				<ul>
+<li>Relational Data Contracts</li>
+<li>Apps That Earn and Moderate</li>
 <li>Time-Range Indexes</li>
 <li>indexOnly Document Types</li>
 <li>Ranked Queries &amp; HAVING</li>
-<li>Document References</li>
 <li>Chained Queries</li>
 <li>Richer Query Matching</li>
+<li>Expiring Documents</li>
+<li>Spending-Limited Keys</li>
+<li>Faster Withdrawals</li>
 </ul>
 	    			</div>
     			</div>    			
     			<div class="col-lg-8">
     				<div class="richtext text-sm px-lg-3">
-			    	<h3>Time-Range Indexes</h3>
+			    	<h3>Relational Data Contracts</h3>
+<p>Documents can refer to other documents, identities, keys, contracts and tokens — by ID or through a unique index, including from array elements — and the network checks every reference when the document is written. Property constraints, anyOf and allOf rules, typed arrays, distinctFrom, maxBytes and requiredSince move the integrity checks apps used to fake client-side into consensus. The contract language more than doubles, from 119 to 248 keys, in protocol version 14.</p>
+<h3>Apps That Earn and Moderate</h3>
+<p>A contract can charge action fees that are paid to its owner and its moderators, collected with a new fee-claim transition. It can also opt into moderation by its owner, by an appointed team, or by a team that masternodes elect from a published charter — with bans and suspensions that carry reasons, time-limited deletion windows, and restores from a hashed removal record. Two new system contracts make this work: an app on Platform can fund itself and police itself without its developer holding the keys.</p>
+<h3>Time-Range Indexes</h3>
 <p>Indexes over sliding time windows make queries like “what’s trending this week” or “top posters this month” fast and provable — the leaderboard-style reads a social app runs constantly.</p>
 <h3>indexOnly Document Types</h3>
 <p>Likes, follows, and votes don’t need full documents. An indexOnly document type stores them as bare index entries at a fraction of the cost, while staying fully queryable and provable.</p>
 <h3>Ranked Queries &amp; HAVING</h3>
 <p>Rank results by counts or sums, filter on aggregates with HAVING, and page through the ranking — with every page backed by a cryptographic proof.</p>
-<h3>Document References</h3>
-<p>Documents can hold refersTo links to other documents or identities, validated by the network at write time. This gives Platform a real relational layer: a reference you store is guaranteed to point at something that exists.</p>
 <h3>Chained Queries</h3>
 <p>Semi-join style questions — “posts liked by this user” — are answered server-side in a single proven round trip instead of many client-stitched queries.</p>
 <h3>Richer Query Matching</h3>
-<p>Multiple IN clauses, prefix-level ranked counts, and safer index matching round out the query engine. Together these ship as protocol version 14: a query engine built for social-scale apps, with every result provable.</p>
+<p>Multiple IN clauses, prefix-level ranked counts, and safer index matching round out a query engine built for social-scale apps: trending, leaderboards and joins, with every result provable.</p>
+<h3>Expiring Documents</h3>
+<p>A document can be written with a time to live — an hour, a day, a week — and is removed automatically when it runs out, so an app pays to store it only for as long as it lives. Login sessions, game state and other short-lived records become much cheaper.</p>
+<h3>Spending-Limited Keys</h3>
+<p>A key can be capped by amount and by time — say, 30 cents for one hour — so a web app can sign in with a short-lived key instead of one that can spend the whole identity’s balance.</p>
+<h3>Faster Withdrawals</h3>
+<p>Platform now asks for the next block as soon as a withdrawal is made; with Dash Core v24 that brings withdrawals down from several minutes to seconds. The daily limit changes from a flat 2,000 DASH to 15% of what Platform held a day earlier — at least 500 and at most 4,000 DASH — counted on net outflow.</p>
 			    	</div>
     			</div>
     		</div>
@@ -4980,7 +4996,7 @@ var log_object = {"ajax_url":""};
 			</div>
     		<div class="row">
     			<div class="col-lg-4 border-right">
-					<h3>Dash Platform v4.3</h3>
+					<h3>Dash Platform v5.1</h3>
     				<div class="richtext text-sm">
 	    				<ul>
 <li>Anonymous Contact Requests</li>
@@ -5023,7 +5039,7 @@ var log_object = {"ajax_url":""};
 			</div>
     		<div class="row">
     			<div class="col-lg-4 border-right">
-					<h3>Dash Platform v5.0</h3>
+					<h3>Dash Platform v6.0</h3>
     				<div class="richtext text-sm">
 	    				<ul>
 <li>Smart Contracts</li>
@@ -5035,7 +5051,7 @@ var log_object = {"ajax_url":""};
     			<div class="col-lg-8">
     				<div class="richtext text-sm px-lg-3">
 			    	<h3>Smart Contracts</h3>
-<p>The missing piece: contracts that read and write documents and enforce custom validation the whole network verifies. They run on the execution layer shipped in 4.4 — deterministic, metered, with predictable fees — on top of Platform’s provable database.</p>
+<p>The missing piece: contracts that read and write documents and enforce custom validation the whole network verifies. They run on the execution layer shipped in 5.2 — deterministic, metered, with predictable fees — on top of Platform’s provable database.</p>
 <h3>Native Provable Randomness</h3>
 <p>From day one, contracts get a rand() primitive: provable, unbiasable random values with no oracles and no commit-reveal schemes, derived from threshold-recovered BLS quorum signatures inside the block flow — usable in the very same block.</p>
 <h3>Provably Fair Platform Games</h3>
@@ -5082,7 +5098,7 @@ var log_object = {"ajax_url":""};
 <h3>Identity-Based Profiles</h3>
 <p>You sign in with a Dash Platform identity, and usernames come from DPNS — your profile is yours, portable across any app that speaks Platform.</p>
 <h3>Powered by Platform Queries &amp; Proofs</h3>
-<p>Yappr is the first showcase of the v4.2 query engine — time-range trending, ranked feeds, and lightweight likes and follows — with every feed a provable query result rather than an opaque server response.</p>
+<p>Yappr is the first showcase of the v5.0 query engine — time-range trending, ranked feeds, and lightweight likes and follows — with every feed a provable query result rather than an opaque server response.</p>
 			    	</div>
     			</div>
     		</div>
@@ -5106,7 +5122,7 @@ var log_object = {"ajax_url":""};
 			</div>
     		<div class="row">
     			<div class="col-lg-4 border-right">
-					<h3>Dash Platform v4.4</h3>
+					<h3>Dash Platform v5.2</h3>
     				<div class="richtext text-sm">
 	    				<ul>
 <li>Real-Time Push Streams</li>
